@@ -1,5 +1,3 @@
-package projet;
-
 import java.util.ArrayList;
 
 public class WildFires {
@@ -76,6 +74,25 @@ public class WildFires {
         return new Fire(coordinate, this.fireQuantity, this.timeBeforePropagation);
     }
 
+    public void decrementFireAt(Coordinate coordinate) {
+        for (Fire fire : this.fires) {
+            if (fire.getPosition().sameCoordinate(coordinate)) {
+                fire.decrementation();
+                if (fire.getFireQuantity() <= 0) {
+                    fires.remove(fire);
+                }
+            }
+        }
+    }
+    
+    public Fire getFire(Coordinate coordinate) {
+        for (Fire fire : this.fires) {
+            if (fire.getPosition().sameCoordinate(coordinate)) {
+                return fire;
+            }
+        }
+        return null;
+    }
     public static WildFires getINSTANCE() {
         return INSTANCE;
     }

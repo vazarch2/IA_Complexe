@@ -1,5 +1,3 @@
-package projet;
-
 public class Action {
 	
 	private String typeAction;

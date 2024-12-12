@@ -8,7 +8,7 @@ public class Coordinate {
 	private boolean isBase = false;
 	private boolean isFire = false;
 	private int nbPeople;
-	private int TimeBeforeDead = 50;
+	private int timeBeforeDead = 50;
 
 	private String[] robots = new String[0];
 
@@ -48,12 +48,12 @@ public class Coordinate {
 	}
 
 	public void decrementTimeBeforeDead() {
-		this.TimeBeforeDead--;
+		this.timeBeforeDead--;
 	}
 
 	public void savePeople() {
 		this.nbPeople = 0;
-		this.TimeBeforeDead = -1;
+		this.timeBeforeDead = -1;
 	}
 
 	public void addPeople(int nbPeople) {
@@ -109,11 +109,11 @@ public class Coordinate {
 	}
 
 	public int getTimeBeforeDead() {
-		return TimeBeforeDead;
+		return timeBeforeDead;
 	}
 
 	public void setTimeBeforeDead(int timeBeforeDead) {
-		TimeBeforeDead = timeBeforeDead;
+		this.timeBeforeDead = timeBeforeDead;
 	}
 
 	public void setRobots(String[] robots) {

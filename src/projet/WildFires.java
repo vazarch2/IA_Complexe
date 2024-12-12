@@ -59,13 +59,13 @@ public class WildFires {
         // Utiliser Grid pour déterminer une position pour le nouveau feu
         int x = (int) (Math.random() * 11);
         int y = (int) (Math.random() * 11);
-        Coordinate firePosition = Grid.getInstance().coordinates[x][y];
+        Coordinate firePosition = Grid.getInstance().getCoordinates()[x][y];
 
         // Vérifier si la position n'est pas déjà occupée par un feu ou une base
-        if (!firePosition.isFire && !firePosition.isBase) {
+        if (!firePosition.isFire() && !firePosition.isBase()) {
             // Créer un nouveau feu et l'ajouter à la liste des feux
             fires.add(new Fire(firePosition, this.fireQuantity, this.timeBeforePropagation));
-            firePosition.isFire = true;
+            firePosition.setFire( true);
         } else {
             // Choisir une nouvelle position si la première est occupée par
             this.newFire();

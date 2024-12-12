@@ -40,19 +40,19 @@ public class MainAlgorythm {
                 doTasks();
                 remainingTime -= timeToSleep;
 
-                if (remainingTime <= 0 || wildfires.fires.isEmpty() || wildfires.fires.size() == 120) {
+                if (remainingTime <= 0 || wildfires.getFires().isEmpty() || wildfires.getFires().size() == 120) {
                     timer.cancel(); // Stop the timer when the condition is met
-                    if (remainingTime <= 0 || wildfires.fires.size() == 120) {
-                        int nbPeopleSaved = base.nbPersonnesSauvees;
-                        System.out.println("Perdu, il reste " + wildfires.fires.size() + " feux, vous avez sauvé "
+                    if (remainingTime <= 0 || wildfires.getFires().size() == 120) {
+                        int nbPeopleSaved = base.getNbSavedPeople();
+                        System.out.println("Perdu, il reste " + wildfires.getFires().size() + " feux, vous avez sauvé "
                                 + nbPeopleSaved + " personnes");
                         System.out.println("Nombre de personnes non sauvées : " + base.getUnsavedPeopleCount());
-                        System.out.println("Nombre de feux eteints : " + wildfires.nbFiresPutedOut);
+                        System.out.println("Nombre de feux eteints : " + wildfires.getNbFiresPutedOut());
                     } else {
                         double time = (MAXTIME - remainingTime) / 1000;
                         System.out.print("Feux éteints en :" + time + "s");
                         System.out.println("Nombre de personnes non sauvées : " + base.getUnsavedPeopleCount());
-                        System.out.println("Nombre de feux eteints : " + wildfires.nbFiresPutedOut);
+                        System.out.println("Nombre de feux eteints : " + wildfires.getNbFiresPutedOut());
                     }
                 }
             }

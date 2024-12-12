@@ -24,8 +24,8 @@ public class Robot {
 	 * @return le nombre de deciseconde que le robot aura enlevé au feu une fois son parcours terminé
 	 */
 	public int CreateActionSequence(Fire fire) {
-		Coordinate destination = fire.position;
-		int fireToDecrement = fire.fireQuantity;
+		Coordinate destination = fire.getPosition();
+		int fireToDecrement = fire.getFireQuantity();
 		Coordinate[] path = Grid.getInstance().getPath(this.position, destination);
 		int pathLength = path.length;
 		int effectiveDecrementedFire = Math.min(this.battery - pathLength * 2, fireToDecrement);
@@ -42,7 +42,7 @@ public class Robot {
 				this.actionSequence.add(new Action("move", path[actionSequenceLenght - i -2]));//retour
 			}
 		}
-		this.actionSequence.addLast(new Action("move", Base.getInstance().position));//retour
+		this.actionSequence.addLast(new Action("move", Base.getInstance().getPosition()));//retour
 		return effectiveDecrementedFire;
 	}
 
@@ -62,24 +62,24 @@ public class Robot {
 			Grid grid = Grid.getInstance();
 			Base base = Base.getInstance();
 			//sauve les personnes si il y a le feu
-			Coordinate actualPosition = grid.coordinates[this.position.x][this.position.y];
-			if (!actualPosition.isBase && actualPosition.isFire && actualPosition.TimeBeforeDead>0){
-				base.savePeople(actualPosition.nbPeople);
+			Coordinate actualPosition = grid.getCoordinates()[this.position.getX()][this.position.getY()];
+			if (!actualPosition.isBase() && actualPosition.isFire() && actualPosition.getTimeBeforeDead()>0){
+				base.savePeople(actualPosition.getNbPeople());
 				actualPosition.savePeople();
 			}
 			// regarde les voisins
 			Coordinate[] neighbors = grid.getNeighbors(this.position);
 			for (int i = 0; i < neighbors.length; i++) {
-				if(neighbors[i].isFire) {
+				if(neighbors[i].isFire()) {
 					base.addFire(WildFires.getInstance().getFire(neighbors[i]));
 				}
 			}
 			//execution de l'action
-			if(action.typeAction.equals("move")) {
-				grid.moveRobot(this.name,  this.position,  action.coordinate);
-				this.position = action.coordinate;
+			if(action.getTypeAction().equals("move")) {
+				grid.moveRobot(this.name,  this.position,  action.getCoordinate());
+				this.position = action.getCoordinate();
 			}else {
-				WildFires.getInstance().decrementFireAt(action.coordinate);
+				WildFires.getInstance().decrementFireAt(action.getCoordinate());
 			}
 			if(!this.actionSequence.isEmpty()) {
 				//le robot est de retour

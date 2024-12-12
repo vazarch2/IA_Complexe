@@ -11,7 +11,7 @@ public class Fire {
 
     public Fire(Coordinate position, int fireQuantity, int timeBeforePropagation) {
         this.position = position;
-        this.nbPeople = position.nbPeople;
+        this.nbPeople = position.getNbPeople();
         this.fireQuantity = fireQuantity;
         this.timeBeforePropagation = timeBeforePropagation;
         this.maxFireQuantity = fireQuantity;
@@ -39,7 +39,7 @@ public class Fire {
         for (Coordinate neighbor : neighbors) {
             int probability = (int) Math.floor(Math.random() * 100);
             if (probability < 33) {
-                neighbor.isFire = true;
+                neighbor.setFire(true);
                 WildFires.getInstance().addFire(new Fire(neighbor, this.maxFireQuantity, this.maxTimeBeforePropagation));
             }
         }
@@ -52,7 +52,7 @@ public class Fire {
      public void decrementation() {
         this.fireQuantity--;
         if(this.fireQuantity <= 0){
-            this.position.isFire = false;
+            this.position.setFire(false);
         }
     }
 
@@ -61,7 +61,7 @@ public class Fire {
     }
 
     public void killPeople() {
-        Grid.getInstance().coordinates[position.x][position.y].decrementTimeBeforeDead();
+        Grid.getInstance().getCoordinates()[position.getX()][position.getY()].decrementTimeBeforeDead();
     }
 
 

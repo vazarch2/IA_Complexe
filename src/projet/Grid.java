@@ -13,7 +13,7 @@ public class Grid {
 			for (int j=0; j<11; j++) {
 				Coordinate c =  new Coordinate(i, j);
 				if(j==5 && i==5) {
-					c.isBase = true;
+					c.setBase(true);
 				}
 				this.coordinates[i][j] = c;
 			}
@@ -28,51 +28,51 @@ public class Grid {
 		int pathLength = Grid.getDistance(from, to);
 		Coordinate[] path = new Coordinate[pathLength];
 		int factorX = 0;
-		if(from.x < to.x) {
+		if(from.getX() < to.getX()) {
 			factorX = 1;
-		}else if(from.x > to.x) {
+		}else if(from.getX() > to.getX()) {
 			factorX = -1;
 		}
 		int cpt = 0;
-		int column = from.x;
-		while(column != to.x) {
+		int column = from.getX();
+		while(column != to.getX()) {
 			column = column + factorX;
-			path[cpt] = this.coordinates[column][from.y];
+			path[cpt] = this.coordinates[column][from.getY()];
 			cpt++;
 		}
 		int factorY = 0;
-		if(from.y < to.y) {
+		if(from.getY() < to.getY()) {
 			factorY = 1;
-		}else if(from.y > to.y) {
+		}else if(from.getY() > to.getY()) {
 			factorY = -1;
 		}
-		int row = from.y;
-		while(row != to.y) {
+		int row = from.getY();
+		while(row != to.getY()) {
 			row = row + factorY;
-			path[cpt] = this.coordinates[to.x][row];
+			path[cpt] = this.coordinates[to.getX()][row];
 			cpt++;
 		}
 		return path;
 	}
 	
 	public void setFireToCoordinate(int x, int y) {
-		this.coordinates[x][y].isFire = true;
+		this.coordinates[x][y].setFire(true);;
 	}
 	
 	public void unsetFireOnCoordinate(int x, int y) {
-		this.coordinates[x][y].isFire = false;
+		this.coordinates[x][y].setFire(false);;
 	}
 	
 	public void moveRobot(String robotName, Coordinate from, Coordinate to) {
-		this.coordinates[from.x][from.y].removeRobot(robotName);
-		this.coordinates[to.x][to.y].addRobot(robotName);
+		this.coordinates[from.getX()][from.getY()].removeRobot(robotName);
+		this.coordinates[to.getX()][to.getY()].addRobot(robotName);
 	}
 	
 	
 	public Coordinate[] getNeighbors(Coordinate coordinate) { 
 		Coordinate[] neighbors;
-		int x = coordinate.x;
-		int y = coordinate.y;
+		int x = coordinate.getX();
+		int y = coordinate.getY();
 		if(x == 0) {
 			if(y == 0) {
 				neighbors= new Coordinate[3];
@@ -142,7 +142,7 @@ public class Grid {
 	}
 	
 	public static int getDistance(Coordinate from, Coordinate to) {
-		return Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
+		return Math.abs(from.getX() - to.getX()) + Math.abs(from.getY() - to.getY());
 	}
 
 	public static Grid getINSTANCE() {

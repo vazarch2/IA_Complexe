@@ -78,11 +78,11 @@ public class Interface extends JFrame {
 
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
-				coordinate = this.grid.coordinates[i][j];
+				coordinate = this.grid.getCoordinates()[i][j];
 				JPanel coordinatexij = new JPanel();
-				if (coordinate.isBase) {
+				if (coordinate.isBase()) {
 					coordinatexij.setBackground(new Color(200, 200, 0));
-				} else if (coordinate.isFire) {
+				} else if (coordinate.isFire()) {
 					coordinatexij.setBackground(new Color(255, 0, 0));
 				} else {
 					coordinatexij.setBackground(new Color(0, 200, 0));
@@ -92,7 +92,7 @@ public class Interface extends JFrame {
 				robotsNamesxij.setText("R: " + coordinate.getRobots());
 				coordinatexij.add(robotsNamesxij);
 				JTextPane nbPeoplexij = new JTextPane();
-				nbPeoplexij.setText("nbH: " + coordinate.nbPeople);
+				nbPeoplexij.setText("nbH: " + coordinate.getNbPeople());
 				coordinatexij.add(nbPeoplexij);
 			}
 		}

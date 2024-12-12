@@ -1,7 +1,6 @@
 package projet;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class WildFires {
 

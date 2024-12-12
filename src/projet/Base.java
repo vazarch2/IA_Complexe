@@ -28,12 +28,12 @@ public class Base {
 		for (int i = 0; i < nbExplorationRobots; i++){
 
 			this.robotsExploration.add(new Robot("e" + i, position));
-			grid.coordinates[position.x][position.y].addRobot(this.robotsExploration.get(i).name);
+			grid.getCoordinates()[position.x][position.y].addRobot(this.robotsExploration.get(i).getName());
 		}
 		for (int i = 0; i < nbRobots - nbExplorationRobots ; i++){
 			this.robots.add(new Robot("r" + i, position));
 			this.storedRobots.add(this.robots.get(i));
-			grid.coordinates[position.x][position.y].addRobot(this.robots.get(i).name);
+			grid.getCoordinates()[position.x][position.y].addRobot(this.robots.get(i).getName());
 		}
 		this.storedRobots.addAll(this.robots);
 	}

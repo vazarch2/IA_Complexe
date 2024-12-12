@@ -1,5 +1,3 @@
-package projet;
-
 public class Coordinate {
 
 	private int x;

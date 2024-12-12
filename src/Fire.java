@@ -1,5 +1,3 @@
-package projet;
-
 public class Fire {
 
     private Coordinate position;
@@ -40,7 +38,7 @@ public class Fire {
             int probability = (int) Math.floor(Math.random() * 100);
             if (probability < 33) {
                 neighbor.setFire(true);
-                WildFires.getInstance().addFire(new Fire(neighbor, this.maxFireQuantity, this.maxTimeBeforePropagation));
+                WildFires.getInstance().getFires().add(new Fire(neighbor, this.maxFireQuantity, this.maxTimeBeforePropagation));
             }
         }
     }

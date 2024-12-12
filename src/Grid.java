@@ -1,5 +1,3 @@
-package projet;
-
 public class Grid {
 
 	public static Grid INSTANCE = new Grid();

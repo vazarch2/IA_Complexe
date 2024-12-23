@@ -1,120 +1,91 @@
+import java.util.ArrayList;
+
 public class Coordinate {
 
-	private int x;
-	private int y;
+    private final ArrayList<String> robots;
+    private int x;
+    private int y;
+    private int secheresse = 1;
+    private boolean isBase = false;
+    private boolean isFire = false;
+    private int nbPeople;
 
-	private boolean isBase = false;
-	private boolean isFire = false;
-	private int nbPeople;
-	private int timeBeforeDead = 50;
+    public Coordinate(int x, int y) {
+        this.x = x;
+        this.y = y;
+        robots = new ArrayList<String>();
+        this.nbPeople = (int) Math.floor(Math.random() * 10);
+    }
 
-	private String[] robots = new String[0];
+    public void addRobot(String robotName) {
+        robots.add(robotName);
+    }
 
-	public Coordinate(int x, int y) {
-		if (x < 0 || x > 11 || y < 0 || y > 11) {
-			throw new IllegalArgumentException("les coordonées doivent être entre 0 et 11");
-		}
-		this.x = x;
-		this.y = y;
-		this.nbPeople = (int) Math.floor(Math.random() * 10);
-	}
+    public void removeRobot(String robotName) {
+        robots.remove(robotName);
+    }
 
-	public boolean sameCoordinate(Coordinate c) {
-		if (this.x == c.x && this.y == c.y) {
-			return true;
-		}
-		return false;
-	}
+    public String toString() {
+        return "[" + x + ":" + y + "]";
+    }
 
-	public void addRobot(String robotName) {
-		String[] newArray = new String[this.robots.length + 1];
-        System.arraycopy(this.robots, 0, newArray, 0, this.robots.length);
-		newArray[newArray.length - 1] = robotName;
-		this.robots = newArray;
-	}
+    public void addPeople(int nbPeople) {
+        this.nbPeople += nbPeople;
+    }
 
-	public void removeRobot(String robotName) {
-		String[] newArray = new String[this.robots.length - 1];
-		int cpt = 0;
-		for (int i = 0; i < this.robots.length; i++) {
-			if (this.robots[i] != robotName) {
-				newArray[cpt] = this.robots[i];
-				cpt++;
-			}
-		}
-		this.robots = newArray;
-	}
+    public ArrayList<String> getRobots() {
+        return robots;
+    }
 
-	public void decrementTimeBeforeDead() {
-		this.timeBeforeDead--;
-	}
+    public int getX() {
+        return x;
+    }
 
-	public void savePeople() {
-		this.nbPeople = 0;
-		this.timeBeforeDead = -1;
-	}
+    public void setX(int x) {
+        this.x = x;
+    }
 
-	public void addPeople(int nbPeople) {
-		this.nbPeople += nbPeople;
-	}
+    public int getY() {
+        return y;
+    }
 
-	public String getRobots(){
-		String robots = "";
-		for (String robot : this.robots) {
-			robots += robot + " ";
-		}
-		return robots;
-	}
+    public void setY(int y) {
+        this.y = y;
+    }
 
-	public int getX() {
-		return x;
-	}
+    public boolean isBase() {
+        return isBase;
+    }
 
-	public void setX(int x) {
-		this.x = x;
-	}
+    public void setBase(boolean base) {
+        isBase = base;
+    }
 
-	public int getY() {
-		return y;
-	}
+    public boolean isFire() {
+        return isFire;
+    }
 
-	public void setY(int y) {
-		this.y = y;
-	}
+    public void setFire(boolean fire) {
+        isFire = fire;
+    }
 
-	public boolean isBase() {
-		return isBase;
-	}
+    public int getNbPeople() {
+        return nbPeople;
+    }
 
-	public void setBase(boolean base) {
-		isBase = base;
-	}
+    public void setNbPeople(int nbPeople) {
+        this.nbPeople = nbPeople;
+    }
 
-	public boolean isFire() {
-		return isFire;
-	}
+    public boolean compareTo(Coordinate coordinate) {
+        return this.x == coordinate.getX() && this.y == coordinate.getY();
+    }
 
-	public void setFire(boolean fire) {
-		isFire = fire;
-	}
+    public int getSecheresse() {
+        return secheresse;
+    }
 
-	public int getNbPeople() {
-		return nbPeople;
-	}
-
-	public void setNbPeople(int nbPeople) {
-		this.nbPeople = nbPeople;
-	}
-
-	public int getTimeBeforeDead() {
-		return timeBeforeDead;
-	}
-
-	public void setTimeBeforeDead(int timeBeforeDead) {
-		this.timeBeforeDead = timeBeforeDead;
-	}
-
-	public void setRobots(String[] robots) {
-		this.robots = robots;
-	}
+    public void setSecheresse(int secheresse) {
+        this.secheresse = secheresse;
+    }
 }

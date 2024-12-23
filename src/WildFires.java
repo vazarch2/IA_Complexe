@@ -2,120 +2,56 @@ import java.util.ArrayList;
 
 public class WildFires {
 
-    private static WildFires INSTANCE = null;
-
-    private int fireQuantity;
-    private int timeBeforePropagation;
 
     private ArrayList<Fire> fires;
-    private int timeBeforeNewFire;
-    private int nbFiresPutedOut = 0;
 
-    public WildFires(int nbExistingFires, int fireQuantity, int timeBeforePropagation) {
+
+    public WildFires(int nbExistingFires) {
         // Initialisation des feux
         fires = new ArrayList<Fire>();
-        for(int i = 0; i < nbExistingFires; i++) {
-            this.newFire();
-        }
-        this.timeBeforeNewFire = 10;
-        this.fireQuantity = fireQuantity;
-        this.timeBeforePropagation = timeBeforePropagation;
-    }
-
-    public static WildFires getInstance(int nbExistingFires, int fireQuantity, int timeBeforePropagation) {
-        if (INSTANCE == null){
-            INSTANCE = new WildFires(nbExistingFires, fireQuantity, timeBeforePropagation);
-        }
-        return INSTANCE;
-    }
-
-    public static WildFires getInstance() {
-        if (INSTANCE == null) {
-            getInstance(10, 10, 50);
-        }
-        return INSTANCE;
-    }
-
-    public void next() {
-        // Appelle les next des feux, modifie éventuellement this.fires et Grid
-        for (Fire fire : this.fires) {
-            fire.next();
-        }
-
-        // Gestion du temps avant l'apparition d'un nouveau feu
-        if (this.timeBeforeNewFire > 0) {
-            this.timeBeforeNewFire--;
-        } else {
-            this.newFire();
-            this.timeBeforeNewFire = 10; // Réinitialisation du compte à rebours
+        for (int i = 0; i < nbExistingFires; i++) {
+            this.firstFire();
         }
     }
 
-    public void newFire() {
-
-        // Utiliser Grid pour déterminer une position pour le nouveau feu
-        int x = (int) (Math.random() * 11);
-        int y = (int) (Math.random() * 11);
-        Coordinate firePosition = Grid.getInstance().getCoordinates()[x][y];
-
-        // Vérifier si la position n'est pas déjà occupée par un feu ou une base
-        if (!firePosition.isFire() && !firePosition.isBase()) {
-            // Créer un nouveau feu et l'ajouter à la liste des feux
-            fires.add(new Fire(firePosition, this.fireQuantity, this.timeBeforePropagation));
-            firePosition.setFire( true);
-        } else {
-            // Choisir une nouvelle position si la première est occupée par
-            this.newFire();
-        }
-    }
-
-    public Fire newVirtualFire(Coordinate coordinate) {
-        // Créer un nouveau feu virtuel
-        return new Fire(coordinate, this.fireQuantity, this.timeBeforePropagation);
-    }
-
-    public void decrementFireAt(Coordinate coordinate) {
-        for (Fire fire : this.fires) {
-            if (fire.getPosition().sameCoordinate(coordinate)) {
-                fire.decrementation();
-                if (fire.getFireQuantity() <= 0) {
-                    fires.remove(fire);
+    public void update() {
+        ArrayList<Fire> newFire = new ArrayList<>();
+        ArrayList<Fire> oldFire = new ArrayList<>();
+        for (int i = 0; i < fires.size(); i++) {
+            Fire actualFire = fires.get(i);
+            Coordinate position = actualFire.getPosition();
+            int secheresse = position.getSecheresse();
+            position.setSecheresse(secheresse << 1);
+            if ((secheresse << 1) > 100 || secheresse == 0)
+                oldFire.add(actualFire);
+            for (Coordinate voisin : MainAlgorythm.grid.getNeighbors(position)) {
+                voisin.setSecheresse(voisin.getSecheresse() << 1);
+                int aleatoire = (int) (Math.random() * 100 + 1);
+                if (voisin.getSecheresse() > aleatoire) {
+                    newFire.add(new Fire(voisin));
+                    MainAlgorythm.grid.setFireToCoordinate(voisin.getX(), voisin.getY());
+                    MainAlgorythm.grid.killPeople(voisin.getX(), voisin.getY());
                 }
             }
         }
+        fires.removeAll(oldFire);
+        fires.addAll(newFire);
     }
-    
-    public Fire getFire(Coordinate coordinate) {
-        for (Fire fire : this.fires) {
-            if (fire.getPosition().sameCoordinate(coordinate)) {
-                return fire;
-            }
+
+    public void firstFire() {
+        // Utiliser Grid pour déterminer une position pour le nouveau feu
+        int x = (int) (Math.random() * MainAlgorythm.grid.getCoordinates().length);
+        int y = (int) (Math.random() * MainAlgorythm.grid.getCoordinates().length);
+        Coordinate firePosition = MainAlgorythm.grid.getCoordinates()[x][y];
+        while (!firePosition.isBase() && !firePosition.isFire()) {
+            x = (int) (Math.random() * MainAlgorythm.grid.getCoordinates().length);
+            y = (int) (Math.random() * MainAlgorythm.grid.getCoordinates().length);
+            firePosition = MainAlgorythm.grid.getCoordinates()[x][y];
+            fires.add(new Fire(firePosition));
+            firePosition.setFire(true);
         }
-        return null;
-    }
-    public static WildFires getINSTANCE() {
-        return INSTANCE;
     }
 
-    public static void setINSTANCE(WildFires INSTANCE) {
-        WildFires.INSTANCE = INSTANCE;
-    }
-
-    public int getFireQuantity() {
-        return fireQuantity;
-    }
-
-    public void setFireQuantity(int fireQuantity) {
-        this.fireQuantity = fireQuantity;
-    }
-
-    public int getTimeBeforePropagation() {
-        return timeBeforePropagation;
-    }
-
-    public void setTimeBeforePropagation(int timeBeforePropagation) {
-        this.timeBeforePropagation = timeBeforePropagation;
-    }
 
     public ArrayList<Fire> getFires() {
         return fires;
@@ -125,20 +61,6 @@ public class WildFires {
         this.fires = fires;
     }
 
-    public int getTimeBeforeNewFire() {
-        return timeBeforeNewFire;
-    }
 
-    public void setTimeBeforeNewFire(int timeBeforeNewFire) {
-        this.timeBeforeNewFire = timeBeforeNewFire;
-    }
-
-    public int getNbFiresPutedOut() {
-        return nbFiresPutedOut;
-    }
-
-    public void setNbFiresPutedOut(int nbFiresPutedOut) {
-        this.nbFiresPutedOut = nbFiresPutedOut;
-    }
 }
     

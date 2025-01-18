@@ -35,7 +35,8 @@ public class Robot {
                 int x = (int) (Math.random() * grid.getCoordinates().length);
                 int y = (int) (Math.random() * grid.getCoordinates().length);
                 goal = grid.getCoordinates()[x][y];
-            }
+            } else
+                goal = knowFire.removeFirst().getPosition();
             route = grid.getPath(position, goal);
         } else {
             if (route.isEmpty() || (battery == grid.getDistance(position, baseCoordinate)) || (water == 0)) {

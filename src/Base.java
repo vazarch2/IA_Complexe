@@ -3,13 +3,13 @@ import java.util.ArrayList;
 public class Base {
 
     public final Coordinate position;
+    private int savedPeople = 0;
     private ArrayList<Robot> robotsFire;
     private ArrayList<Fire> knownFires;
     private ArrayList<Robot> robotsRescuit;
-    private int nbSavedPeople = 0;
 
 
-    public Base(int nbRobots, int nbExplorationRobots) {
+    public Base(int nbRobots) {
         this.robotsRescuit = new ArrayList<>();
         this.robotsFire = new ArrayList<>();
         this.knownFires = new ArrayList<>();
@@ -19,32 +19,28 @@ public class Base {
             this.robotsFire.add(newRobot);
             MainAlgorythm.grid.getCoordinates()[position.getX()][position.getY()].addRobot(newRobot.getName());
         }
-        for (int i = 0; i < nbExplorationRobots; i++) {
-            Robot newRobot = new Robot("r" + i, position);
-            this.robotsRescuit.add(new Robot("r" + i, position));
-            MainAlgorythm.grid.getCoordinates()[position.getX()][position.getY()].addRobot(newRobot.getName());
-        }
     }
+
 
     public void update() {
         for (Robot robotsFire : robotsFire) {
-            if (position.compareTo(robotsFire.getPosition())) {
+            if (this.position.compareTo(robotsFire.getPosition()) && robotsFire.hasNewFireInfo()) {
                 ArrayList<Fire> robotFire = robotsFire.getKnowFire();
                 for (Fire fire : robotFire) {
                     addFire(fire);
                 }
                 sortFires();
                 robotsFire.setKnowFire(knownFires);
+                if (!knownFires.isEmpty()) knownFires.removeFirst();
+                robotsFire.setBattery(3);
+                robotsFire.resetNewFireInfo(); // Reset the flag after sharing the info
             }
-            robotsFire.setBattery(30);
-            robotsFire.setWater(20);
             robotsFire.update(this.position, MainAlgorythm.grid);
         }
+        System.out.println("Base: " + savedPeople + " people saved");
+        System.out.println("Base: " + knownFires + " fires known");
     }
 
-    public void savePeople(int nbPeople) {
-        this.nbSavedPeople += nbPeople;
-    }
 
     public void addFire(Fire fire) {
         if (!knownFires.contains(fire)) knownFires.add(fire);
@@ -56,13 +52,14 @@ public class Base {
 
 
     /**
-     * on trie par distance: les feux les plus loins seront eteints en premier ce qui permet d'explorer la zone en meme temps
+     * on trie par distance: les feux les plus proches de la base
+     *  seront eteints en premier
      */
     private void sortFires() {
         this.knownFires.sort((Fire f1, Fire f2) -> {
             int distanceA = MainAlgorythm.grid.getDistance(position, f1.getPosition());
             int distanceB = MainAlgorythm.grid.getDistance(position, f2.getPosition());
-            return Integer.compare(distanceA, distanceB);
+            return Integer.compare(distanceB, distanceA);
         });
     }
 
@@ -97,13 +94,14 @@ public class Base {
     }
 
 
-    public int getNbSavedPeople() {
-        return nbSavedPeople;
+    public int getSavedPeople() {
+        return savedPeople;
     }
 
-    public void setNbSavedPeople(int nbSavedPeople) {
-        this.nbSavedPeople = nbSavedPeople;
+    public void addSavedPeople(){
+        this.savedPeople++;
     }
+    
 
 
 }

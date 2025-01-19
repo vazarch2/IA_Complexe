@@ -16,6 +16,7 @@ public class Grid {
                 if (j == Math.round((float) x / 2) && i == Math.round((float) y / 2)) {
                     c.setBase(true);
                     baseCoord = c;
+                    baseCoord.setSecheresse(0);
                 }
                 this.coordinates[i][j] = c;
             }
@@ -30,26 +31,19 @@ public class Grid {
         ArrayList<Coordinate> path = new ArrayList<>();
         int from_x = from.getX();
         int from_y = from.getY();
-        int factorX = 0, factorY = 0;
-        if (from_x > to.getX()) {
-            factorX = -1;
-        } else {
-            factorX = 1;
+        int factorX = (from_x > to.getX()) ? -1 : 1;
+        int factorY = (from_y > to.getY()) ? -1 : 1;
+        while (true) {
+            if(from_x != to.getX()){
+                from_x += factorX;
+                path.add(this.getCoordinate(from_x, from_y));
+            } 
+            if(from_y != to.getY()){
+                from_y += factorY;
+                path.add(this.getCoordinate(from_x, from_y));
+            }
+            if(from_x == to.getX() && from_y == to.getY())break;
         }
-        if (from_y > to.getY()) {
-            factorY = -1;
-        } else {
-            factorY = 1;
-        }
-        while (from_x != to.getX()) {
-            if (from_x != to.getX()) from_x += factorX;
-            path.add(new Coordinate(from_x, from_y));
-        }
-        while (from_y != to.getY()) {
-            if (from_y != to.getY()) from_y += factorY;
-            path.add(new Coordinate(from_x, from_y));
-        }
-        path.add(to);
         return path;
     }
 
@@ -57,10 +51,11 @@ public class Grid {
         this.coordinates[x][y].setFire(true);
     }
 
-    public void unsetFireOnCoordinate(int x, int y) {
+    public void unsetFireOnCoordinate(int x, int y, boolean isRobot) {
         this.coordinates[x][y].setFire(false);
         this.coordinates[x][y].setSecheresse(0);
-        nbExtinguishedFires++;
+        MainAlgorythm.getWildfires().removeFire(new Fire(this.coordinates[x][y]));
+        if(isRobot)nbExtinguishedFires++;
 
     }
 
@@ -80,7 +75,7 @@ public class Grid {
         for (int i = x - 1; i < x + 2; i++) {
             for (int j = y - 1; j < y + 2; j++) {
                 try {
-                    if (!coordinates[i][j].compareTo(coordinate)) neighbors.add(coordinates[i][j]);
+                    neighbors.add(coordinates[i][j]);
                 } catch (Exception e) {
                 }
             }
@@ -88,6 +83,9 @@ public class Grid {
         return neighbors;
     }
 
+    public Coordinate getCoordinate(int x, int y) {
+        return this.coordinates[x][y];
+    }
 
     public Coordinate[][] getCoordinates() {
         return coordinates;
@@ -103,6 +101,41 @@ public class Grid {
 
     public int getNbExtinguishedFires() {
         return nbExtinguishedFires;
+    }
+
+    public int getNbPeople() {
+        int nbPeople = 0;
+        for (Coordinate[] coordinate : coordinates) {
+            for (Coordinate value : coordinate) {
+                nbPeople += value.getNbPeople();
+            }
+        }
+        return nbPeople;
+    }
+
+    public int getNbPeopleWithoutBase() { 
+        int nbPeople = 0;
+        for (Coordinate[] coordinate : coordinates) {
+            for (Coordinate value : coordinate) {
+                if(!value.isBase())nbPeople += value.getNbPeople();
+            }
+        }
+        return nbPeople;
+    }
+
+    public void addPeople(int x, int y, int nbPeople) {
+        this.coordinates[x][y].addPeople(nbPeople);
+    }
+
+
+    public int getNbFire(){
+        int nbFire = 0;
+        for (Coordinate[] coordinate : coordinates) {
+            for (Coordinate value : coordinate) {
+                if(value.isFire())nbFire++;
+            }
+        }
+        return nbFire;
     }
 
 }

@@ -58,10 +58,13 @@ public class SwingInterface extends JFrame {
                     cell.setText("Fire");
                 } else if (!coord.getRobots().isEmpty()) {
                     cell.setBackground(Color.GREEN);
-                    cell.setText("Robot");
+                    cell.setText(coord.getRobots().toString());
                 } else if (coord.getNbPeople() > 0) {
                     cell.setBackground(Color.YELLOW);
                     cell.setText("People: " + coord.getNbPeople());
+                } else if (coord.getSecheresse() == 0) {
+                    cell.setBackground(Color.GRAY);
+                    cell.setText("X");
                 } else {
                     cell.setBackground(Color.WHITE);
                     cell.setText("");
@@ -74,7 +77,7 @@ public class SwingInterface extends JFrame {
         gridPanel.repaint();
     }
 
-    public void showEndScreen(int extinguishedFires, int savedPeople, int time) {
+    public void showEndScreen(int extinguishedFires, int savedPeople, int initialPeople, int time) {
         // Clear the frame
         getContentPane().removeAll();
         setLayout(new BorderLayout());
@@ -84,7 +87,7 @@ public class SwingInterface extends JFrame {
         endLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
         JLabel statsLabel = new JLabel(
-                String.format("Extinguished Fires: %d, Saved People: %d, Total time : %d", extinguishedFires, savedPeople, time),
+                String.format("Extinguished Fires: %d, Saved People: %d / %d, Total time : %d", extinguishedFires, savedPeople, initialPeople, time),
                 SwingConstants.CENTER
         );
         statsLabel.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -98,6 +101,6 @@ public class SwingInterface extends JFrame {
         repaint();
     }
 
-
+    
     
 }

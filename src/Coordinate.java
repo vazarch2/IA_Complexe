@@ -8,13 +8,18 @@ public class Coordinate {
     private int secheresse = 1;
     private boolean isBase = false;
     private boolean isFire = false;
+
     private int nbPeople;
 
     public Coordinate(int x, int y) {
         this.x = x;
         this.y = y;
         robots = new ArrayList<String>();
-        this.nbPeople = (int) Math.floor(Math.random() * 10);
+        int chance = (int) (Math.random() * 100);
+        if (chance > 95) {
+            this.nbPeople = 1;
+        }
+        
     }
 
     public void addRobot(String robotName) {

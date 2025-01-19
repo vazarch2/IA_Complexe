@@ -2,8 +2,11 @@ import java.util.ArrayList;
 
 public class Grid {
 
+
     private Coordinate baseCoord;
     private Coordinate[][] coordinates; //premier tableau = x, deuxieme tableau = y
+
+    private int nbExtinguishedFires = 0;
 
     public Grid(int x, int y) {
         this.coordinates = new Coordinate[x][y];
@@ -57,6 +60,8 @@ public class Grid {
     public void unsetFireOnCoordinate(int x, int y) {
         this.coordinates[x][y].setFire(false);
         this.coordinates[x][y].setSecheresse(0);
+        nbExtinguishedFires++;
+
     }
 
     public void killPeople(int x, int y) {
@@ -96,5 +101,8 @@ public class Grid {
         return baseCoord;
     }
 
+    public int getNbExtinguishedFires() {
+        return nbExtinguishedFires;
+    }
 
 }

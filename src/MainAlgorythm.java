@@ -1,25 +1,33 @@
 public class MainAlgorythm {
 
     private static final int MAXTIME = 60000;
-    private static final int timeToSleep = 100;
+    private static final int timeToSleep = 1000;
+    
     private static final int nbExplorationRobots = 3;
     private static final int nbRobotsRescuit = 7;
     private static final int nbExistingFires = 1;
     public static Grid grid;
-    private static Interface view;
+    private static SwingInterface view;
     private static WildFires wildfires;
     private static Base base;
     private static int remainingTime = 60000;
+
 
     public static void doTasks() {
         while (true) {
             wildfires.update();
             if (wildfires.getFires().isEmpty()) return;
             base.update();
-            view.update();
+            view.updateGrid();
             remainingTime -= timeToSleep;
             System.out.println("Remaining time: " + remainingTime);
             if (remainingTime == 0) return;
+
+            try {
+                Thread.sleep(timeToSleep);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -28,10 +36,17 @@ public class MainAlgorythm {
         grid = new Grid(11, 11);
         wildfires = new WildFires(nbExistingFires);
         base = new Base(nbRobotsRescuit, nbExplorationRobots);
-        view = new Interface();
-        doTasks();
-        System.out.println("Nombre de personnes sauvées : " + base.getNbSavedPeople());
-        System.exit(200);
+        view = new SwingInterface(grid);
+    
+        // Run doTasks in a separate thread
+        new Thread(() -> {
+            doTasks();
+            System.out.println("Nombre de personnes sauvées : " + base.getNbSavedPeople());
 
+            view.showEndScreen(grid.getNbExtinguishedFires(), base.getNbSavedPeople(), MAXTIME);
+            System.exit(200);
+        }).start();
+
+        
     }
 }
